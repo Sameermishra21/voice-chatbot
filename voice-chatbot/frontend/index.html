@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice-Enabled AI Chatbot</title>
+  <meta name="description" content="Speak to a deep-learning (BiLSTM) chatbot using your microphone." />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>🎙️ Voice-Enabled AI Chatbot</h1>
+      <p class="subtitle">Speech Recognition + Embedding/BiLSTM Intent Classification</p>
+      <div id="serverStatus" class="server-status checking">Checking server…</div>
+    </header>
+
+    <!-- Microphone controls -->
+    <section class="card controls" aria-label="Microphone controls">
+      <div class="buttons">
+        <button id="startBtn" class="btn btn-start" type="button">🎤 Start Speaking</button>
+        <button id="stopBtn" class="btn btn-stop" type="button" disabled>⏹ Stop Speaking</button>
+      </div>
+
+      <div id="status" class="status idle" role="status" aria-live="polite">
+        Click “Start Speaking” and allow microphone access.
+      </div>
+
+      <div class="meter-row">
+        <div class="meter" aria-hidden="true"><div id="meterFill" class="meter-fill"></div></div>
+        <span id="timer" class="timer">0.0 s</span>
+      </div>
+      <p class="hint">Tip: speak one short question, e.g. “What courses do you offer?” — recording stops automatically after 15 s.</p>
+    </section>
+
+    <!-- Results -->
+    <section class="card results" aria-label="Results">
+      <div class="field">
+        <h2>Recognized Speech</h2>
+        <p id="recognizedText" class="value quote placeholder">Your converted speech will appear here.</p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <h2>Detected Intent</h2>
+          <p id="intent" class="value intent-badge placeholder">—</p>
+        </div>
+        <div class="field">
+          <h2>Confidence</h2>
+          <p id="confidence" class="value placeholder">—</p>
+          <div class="conf-bar"><div id="confFill" class="conf-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <h2>Chatbot Response</h2>
+        <p id="response" class="value quote response placeholder">The chatbot’s answer will appear here.</p>
+      </div>
+
+      <div class="tts-row">
+        <button id="playBtn" class="btn btn-play" type="button" disabled>🔊 Play Response</button>
+        <label class="auto-play"><input type="checkbox" id="autoPlay" /> Auto-play responses</label>
+      </div>
+
+      <details class="details">
+        <summary>Model details (top-3 predictions)</summary>
+        <ol id="topPreds"></ol>
+        <p id="timing" class="small"></p>
+      </details>
+    </section>
+
+    <!-- Conversation log -->
+    <section class="card history" aria-label="Conversation history">
+      <h2>Conversation</h2>
+      <div id="chatLog" class="chat-log">
+        <div class="msg bot">Hi! I’m VoiceBot. Press the microphone button and ask me about courses, fees, admissions, hostel, placements and more.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Voice → Web Audio API → WAV → FastAPI → Speech-to-Text → Embedding + BiLSTM → Response
+    </footer>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
