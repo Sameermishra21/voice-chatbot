@@ -42,6 +42,9 @@ FUNCTION_WORDS = {
     "does", "did", "can", "could", "would", "will", "should", "please", "give", "show",
     "information", "info", "details", "detail", "know", "want", "need", "some", "any",
     "there", "here", "get", "much", "many", "more", "so", "very", "just", "also", "all",
+    "something", "anything", "everything", "thing", "things", "stuff", "bit", "little",
+    "explain", "describe", "say", "said", "talk", "let", "us", "like", "kindly", "hey",
+    "ok", "okay", "now", "then", "its", "has", "have", "had",
 }
 
 
@@ -168,12 +171,12 @@ class IntentClassifier:
 
         # Safety checks before trusting the prediction:
         #  1. the topic words are all unknown (only filler words recognised) -> off-topic
-        #  2. the model itself predicts the out_of_scope intent            -> off-topic
+        #  2. the model's top prediction is the out_of_scope intent        -> off-topic
         #  3. none of the words are in the vocabulary -> the model is guessing
         #  4. softmax probability below the threshold  -> not confident enough
-        if self.tokenizer.only_filler_known(text) or (
-            tag == OUT_OF_SCOPE_TAG and confidence >= self.threshold
-        ):
+        # (if out_of_scope is the model's TOP guess we decline even below the
+        #  threshold: declining can never give the user a wrong college answer)
+        if self.tokenizer.only_filler_known(text) or tag == OUT_OF_SCOPE_TAG:
             return {
                 "intent": OUT_OF_SCOPE_TAG,
                 "predicted_intent": tag,
